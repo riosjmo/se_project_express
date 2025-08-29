@@ -19,7 +19,8 @@
   },
   "homepage": "https://github.com/riosjmo/se_project_express#readme",
   "dependencies": {
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "mongoose": "^8.18.0"
   },
   "devDependencies": {
     "eslint": "^8.57.1",
