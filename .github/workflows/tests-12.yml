@@ -67,6 +67,6 @@ jobs:
         env:
           MONGO_URL: mongodb://localhost:27017/wtwr_db
       - name: Wait for server to be ready
-        run: npx wait-port -t 30000 localhost:3001
+        run: npx wait-on tcp:localhost:3001
       - name: Run test endpoints
         run: cd tests-12-public && bash ./bin/test-endpoints.sh
