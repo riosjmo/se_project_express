@@ -1,4 +1,3 @@
-
 const express = require("express");
 const mongoose = require("mongoose");
 
@@ -15,12 +14,12 @@ mongoose
 app.use(express.json());
 app.use((req, res, next) => {
   req.user = {
-    _id: '68b4dc7f1fea408baada6212'
+    _id: "68b4dc7f1fea408baada6212",
   };
   next();
 });
 
-const routes = require('./routes');
+const routes = require("./routes");
 app.use(express.json());
 app.use(routes);
 

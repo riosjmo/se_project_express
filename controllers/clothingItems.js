@@ -13,6 +13,7 @@ const createItem = (req, res) => {
       res.status(400).send({ message: error.message });
       return null;
     });
+  return null;
 };
 
 const getItems = (req, res) => {
@@ -25,6 +26,7 @@ const getItems = (req, res) => {
       res.status(400).send({ message: error.message });
       return null;
     });
+  return null;
 };
 
 
@@ -44,6 +46,7 @@ const updateItem = (req, res) => {
       res.status(400).send({ message: error.message });
       return null;
     });
+  return null;
 };
 
 const deleteItem = (req, res) => {
@@ -61,6 +64,7 @@ const deleteItem = (req, res) => {
       res.status(400).send({ message: error.message });
       return null;
     });
+  return null;
 };
 
 
@@ -80,6 +84,7 @@ const likeItem = (req, res) => {
       res.status(400).send({ message: error.message });
       return null;
     });
+  return null;
 };
 
 const dislikeItem = (req, res) => {
@@ -98,6 +103,7 @@ const dislikeItem = (req, res) => {
       res.status(400).send({ message: error.message });
       return null;
     });
+  return null;
 };
 
 module.exports = {
