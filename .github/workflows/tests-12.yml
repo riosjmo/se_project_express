@@ -62,9 +62,13 @@ jobs:
         run: npm i
       - name: Installing wait-port
         run: npm install -g wait-port
-      - name: Run server
-        run: npm run start & wait-port -t 30000 localhost:3001
-        env:
-          MONGO_URL: mongodb://localhost:27017/wtwr_db
-      - name: Run test endpoints
-        run: cd tests-12-public && bash ./bin/test-endpoints.sh
+      - name: Start server and run tests
+  run: |
+    npm run start &
+    SERVER_PID=$!
+    npx wait-port -t 30000 localhost:3001
+    cd tests-12-public
+    bash ./bin/test-endpoints.sh
+    kill $SERVER_PID
+  env:
+    MONGO_URL: mongodb://localhost:27017/wtwr_db
