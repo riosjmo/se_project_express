@@ -6,8 +6,10 @@ const routes = require("./routes");
 const app = express();
 const { PORT = 3001 } = process.env;
 
+const { MONGO_URL = "mongodb://127.0.0.1:27017/wtwr_db" } = process.env;
+
 mongoose
-  .connect("mongodb://127.0.0.1:27017/wtwr_db")
+  .connect(MONGO_URL)
   .then(() => {
     // eslint-disable-next-line no-console
     console.log("Connected to MongoDB");
@@ -24,10 +26,8 @@ app.use((req, res, next) => {
 
 app.use(routes);
 
-if (require.main === module) {
+
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console
   console.log(`Server is running on port ${PORT}`);
 });
-}
-module.exports = app;
