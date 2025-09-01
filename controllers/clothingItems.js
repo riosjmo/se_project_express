@@ -11,6 +11,7 @@ const createItem = (req, res) => {
     })
     .catch((error) => {
       res.status(400).send({ message: error.message });
+      return null;
     });
 };
 
@@ -22,6 +23,7 @@ const getItems = (req, res) => {
     })
     .catch((error) => {
       res.status(400).send({ message: error.message });
+      return null;
     });
 };
 
@@ -40,6 +42,7 @@ const updateItem = (req, res) => {
     })
     .catch((error) => {
       res.status(400).send({ message: error.message });
+      return null;
     });
 };
 
@@ -56,6 +59,7 @@ const deleteItem = (req, res) => {
     })
     .catch((error) => {
       res.status(400).send({ message: error.message });
+      return null;
     });
 };
 
@@ -74,6 +78,7 @@ const likeItem = (req, res) => {
     })
     .catch((error) => {
       res.status(400).send({ message: error.message });
+      return null;
     });
 };
 
@@ -91,6 +96,7 @@ const dislikeItem = (req, res) => {
     })
     .catch((error) => {
       res.status(400).send({ message: error.message });
+      return null;
     });
 };
 
