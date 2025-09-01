@@ -11,9 +11,7 @@ const createItem = (req, res) => {
     })
     .catch((error) => {
       res.status(400).send({ message: error.message });
-      return null;
     });
-  return null;
 };
 
 const getItems = (req, res) => {
@@ -24,11 +22,8 @@ const getItems = (req, res) => {
     })
     .catch((error) => {
       res.status(400).send({ message: error.message });
-      return null;
     });
-  return null;
 };
-
 
 const updateItem = (req, res) => {
   const { itemId } = req.params;
@@ -40,13 +35,11 @@ const updateItem = (req, res) => {
       if (!item) {
         return res.status(404).send({ message: "Item not found" });
       }
-      res.status(200).send(item);
+      return res.status(200).send(item);
     })
     .catch((error) => {
       res.status(400).send({ message: error.message });
-      return null;
     });
-  return null;
 };
 
 const deleteItem = (req, res) => {
@@ -58,52 +51,47 @@ const deleteItem = (req, res) => {
       if (!item) {
         return res.status(404).send({ message: "Item not found" });
       }
-      res.status(200).send({ message: "Item deleted successfully" });
+      return res.status(200).send({ message: "Item deleted successfully" });
     })
     .catch((error) => {
       res.status(400).send({ message: error.message });
-      return null;
     });
-  return null;
 };
 
-
 const likeItem = (req, res) => {
-  clothingItem.findByIdAndUpdate(
-    req.params.itemId,
-    { $addToSet: { likes: req.user._id } },
-    { new: true }
-  )
+  clothingItem
+    .findByIdAndUpdate(
+      req.params.itemId,
+      { $addToSet: { likes: req.user._id } },
+      { new: true }
+    )
     .then((item) => {
       if (!item) {
         return res.status(404).send({ message: "Item not found" });
       }
-      res.status(200).send(item);
+      return res.status(200).send(item);
     })
     .catch((error) => {
       res.status(400).send({ message: error.message });
-      return null;
     });
-  return null;
 };
 
 const dislikeItem = (req, res) => {
-  clothingItem.findByIdAndUpdate(
-    req.params.itemId,
-    { $pull: { likes: req.user._id } },
-    { new: true }
-  )
+  clothingItem
+    .findByIdAndUpdate(
+      req.params.itemId,
+      { $pull: { likes: req.user._id } },
+      { new: true }
+    )
     .then((item) => {
       if (!item) {
         return res.status(404).send({ message: "Item not found" });
       }
-      res.status(200).send(item);
+      return res.status(200).send(item);
     })
     .catch((error) => {
       res.status(400).send({ message: error.message });
-      return null;
     });
-  return null;
 };
 
 module.exports = {
