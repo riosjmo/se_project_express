@@ -39,7 +39,7 @@ jobs:
       - name: Run test config
         run: cd tests-12-public && bash ./bin/test-config.sh
 
-test_endpoints:
+  test_endpoints:
     runs-on: ubuntu-latest
     needs: read_sprint_file
     if: ${{ needs.read_sprint_file.outputs.sprint == '12' }}
