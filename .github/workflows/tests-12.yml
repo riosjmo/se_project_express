@@ -60,8 +60,8 @@ jobs:
         run: cd tests-12-public && bash ./bin/prepare-test-endpoints.sh
       - name: Installing Dependencies
         run: npm i
-      - name: Installing wait-port
-        run: npm install -g wait-port
+      - name: Installing wait-on
+        run: npm install -g wait-on
       - name: Run server in background
         run: nohup npm run start > server.log 2>&1 &
         env:
