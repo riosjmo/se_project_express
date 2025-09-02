@@ -65,9 +65,12 @@ jobs:
       - name: Run server in background
         run: nohup npm run start > server.log 2>&1 &
         env:
-          MONGO_URL: mongodb://localhost:27017/wtwr_db
+          MONGO_URL: mongodb://127.0.0.1:27017/wtwr_db
           PORT: 3001
       - name: Wait for server to be ready
-        run: npx wait-on tcp:localhost:3001
+        run: npx wait-on tcp:127.0.0.1:3001
       - name: Run test endpoints
         run: cd tests-12-public && bash ./bin/test-endpoints.sh
+      - name: Debug server log
+        if: failure()
+        run: cat server.log

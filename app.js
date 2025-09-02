@@ -15,6 +15,7 @@ mongoose
     console.log("Connected to MongoDB");
   })
   .catch(console.error);
+  
 
 app.use(express.json());
 app.use((req, res, next) => {
