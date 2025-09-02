@@ -21,7 +21,6 @@ process.on('unhandledRejection', (reason, promise) => {
 mongoose
   .connect(MONGO_URL)
   .then(() => {
-    // eslint-disable-next-line no-console
     console.log("Connected to MongoDB");
   })
   .catch(console.error);
@@ -35,16 +34,17 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send({ error: 'Something went wrong!' });
-  next();
-});
 
 app.use(routes);
 
 
 app.listen(PORT, () => {
-  // eslint-disable-next-line no-console
+app.use(routes);
+
+// Error-handling middleware (must be after routes)
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send({ message: 'An error has occurred on the server.' });
+});
   console.log(`Server is running on port ${PORT}`);
 });
