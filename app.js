@@ -8,6 +8,16 @@ const PORT = process.env.PORT || 3001;
 
 const { MONGO_URL = "mongodb://127.0.0.1:27017/wtwr_db" } = process.env;
 
+process.on('uncaughtException', (err) => {
+  console.error('Unhandled Exception:', err);
+  // Optionally, notify or log the error, but don't exit the process
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+  // Optionally, notify or log the error
+});
+
 mongoose
   .connect(MONGO_URL)
   .then(() => {
@@ -15,7 +25,7 @@ mongoose
     console.log("Connected to MongoDB");
   })
   .catch(console.error);
-  
+
 
 app.use(express.json());
 app.use((req, res, next) => {
@@ -23,6 +33,11 @@ app.use((req, res, next) => {
     _id: "68b4dc7f1fea408baada6212",
   };
   next();
+});
+
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send({ error: 'Something went wrong!' });
 });
 
 app.use(routes);
