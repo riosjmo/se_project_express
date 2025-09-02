@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const routes = require("./routes");
 
 const app = express();
-const { PORT = 3001 } = process.env;
+const PORT = process.env.PORT || 3001;
 
 const { MONGO_URL = "mongodb://127.0.0.1:27017/wtwr_db" } = process.env;
 

@@ -66,6 +66,7 @@ jobs:
         run: nohup npm run start > server.log 2>&1 &
         env:
           MONGO_URL: mongodb://localhost:27017/wtwr_db
+          PORT: 3001
       - name: Wait for server to be ready
         run: npx wait-on tcp:localhost:3001
       - name: Run test endpoints
