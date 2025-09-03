@@ -1,5 +1,5 @@
 const User = require("../models/user");
-const { INTERNAL_SERVER_ERROR_CODE } = require("../utils/errors");
+const { NOT_FOUND_ERROR_CODE, INTERNAL_SERVER_ERROR_CODE, BAD_REQUEST_ERROR_CODE } = require("../utils/errors");
 
 const getUsers = (req, res) => {
   User.find({})
@@ -29,17 +29,17 @@ const getUser = (req, res) => {
   User.findById(userId)
     .orFail(() => {
       const err = new Error('User not found');
-      err.statusCode = 404;
+      err.statusCode = NOT_FOUND_ERROR_CODE;
       throw err;
     })
     .then((user) => res.status(200).send(user))
     .catch((err) => {
       console.error(err);
-      if (err.statusCode === 404 || err.name === "DocumentNotFoundError") {
-        return res.status(404).send({ message: "User not found" });
+      if (err.statusCode === NOT_FOUND_ERROR_CODE || err.name === "DocumentNotFoundError") {
+        return res.status(NOT_FOUND_ERROR_CODE).send({ message: "User not found" });
       }
       if (err.name === "CastError") {
-        return res.status(400).send({ message: "Invalid user ID" });
+        return res.status(BAD_REQUEST_ERROR_CODE).send({ message: "Invalid user ID" });
       }
       return res.status(INTERNAL_SERVER_ERROR_CODE).send({ message: 'An error has occurred on the server.' });
     });

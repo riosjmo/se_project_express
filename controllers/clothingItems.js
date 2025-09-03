@@ -1,4 +1,5 @@
 const clothingItem = require("../models/clothingItems");
+const { NOT_FOUND_ERROR_CODE, BAD_REQUEST_ERROR_CODE } = require("../utils/errors");
 
 const createItem = (req, res) => {
   const { name, weather, imageUrl } = req.body;
@@ -10,7 +11,7 @@ const createItem = (req, res) => {
       res.status(201).send(item);
     })
     .catch((error) => {
-      res.status(400).send({ message: error.message });
+      res.status(BAD_REQUEST_ERROR_CODE).send({ message: error.message });
     });
 };
 
@@ -21,7 +22,7 @@ const getItems = (req, res) => {
       res.status(200).send(items);
     })
     .catch((error) => {
-      res.status(400).send({ message: error.message });
+      res.status(BAD_REQUEST_ERROR_CODE).send({ message: error.message });
     });
 };
 
@@ -32,12 +33,12 @@ const deleteItem = (req, res) => {
     .findByIdAndDelete(itemId)
     .then((item) => {
       if (!item) {
-        return res.status(404).send({ message: "Item not found" });
+        return res.status(NOT_FOUND_ERROR_CODE).send({ message: "Item not found" });
       }
       return res.status(200).send({ message: "Item deleted successfully" });
     })
     .catch((error) => {
-      res.status(400).send({ message: error.message });
+      res.status(BAD_REQUEST_ERROR_CODE).send({ message: error.message });
     });
 };
 
@@ -50,12 +51,12 @@ const likeItem = (req, res) => {
     )
     .then((item) => {
       if (!item) {
-        return res.status(404).send({ message: "Item not found" });
+        return res.status(NOT_FOUND_ERROR_CODE).send({ message: "Item not found" });
       }
       return res.status(200).send(item);
     })
     .catch((error) => {
-      res.status(400).send({ message: error.message });
+      res.status(BAD_REQUEST_ERROR_CODE).send({ message: error.message });
     });
 };
 
@@ -68,12 +69,12 @@ const dislikeItem = (req, res) => {
     )
     .then((item) => {
       if (!item) {
-        return res.status(404).send({ message: "Item not found" });
+        return res.status(NOT_FOUND_ERROR_CODE).send({ message: "Item not found" });
       }
       return res.status(200).send(item);
     })
     .catch((error) => {
-      res.status(400).send({ message: error.message });
+      res.status(BAD_REQUEST_ERROR_CODE).send({ message: error.message });
     });
 };
 
