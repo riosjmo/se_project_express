@@ -10,28 +10,26 @@ const createItem = (req, res) => {
 
   clothingItem
     .create({ name, weather, imageUrl, owner })
-    .then((item) => {
-      res.status(201).send(item);
-    })
+    .then((item) => res.status(201).send(item))
     .catch((error) => {
       if (error.name === "ValidationError") {
         return res
           .status(BAD_REQUEST_ERROR_CODE)
           .send({ message: "Invalid data provided" });
       }
-      res.status(500).send({ message: "An error occurred on the server" });
+      return res
+        .status(500)
+        .send({ message: "An error occurred on the server" });
     });
 };
 
 const getItems = (req, res) => {
   clothingItem
     .find()
-    .then((items) => {
-      res.status(200).send(items);
-    })
-    .catch(() => {
-      res.status(500).send({ message: "An error occurred on the server" });
-    });
+    .then((items) => res.status(200).send(items))
+    .catch(() =>
+      res.status(500).send({ message: "An error occurred on the server" })
+    );
 };
 
 const deleteItem = (req, res) => {
@@ -39,21 +37,20 @@ const deleteItem = (req, res) => {
 
   clothingItem
     .findByIdAndDelete(itemId)
-    .then((item) => {
-      if (!item) {
-        return res
-          .status(NOT_FOUND_ERROR_CODE)
-          .send({ message: "Item not found" });
-      }
-      return res.status(200).send({ message: "Item deleted successfully" });
-    })
+    .then((item) =>
+      !item
+        ? res.status(NOT_FOUND_ERROR_CODE).send({ message: "Item not found" })
+        : res.status(200).send({ message: "Item deleted successfully" })
+    )
     .catch((error) => {
       if (error.name === "CastError") {
         return res
           .status(BAD_REQUEST_ERROR_CODE)
           .send({ message: "Invalid item ID format" });
       }
-      res.status(500).send({ message: "An error occurred on the server" });
+      return res
+        .status(500)
+        .send({ message: "An error occurred on the server" });
     });
 };
 
@@ -83,7 +80,9 @@ const likeItem = (req, res) => {
           .status(BAD_REQUEST_ERROR_CODE)
           .send({ message: "Invalid item ID format" });
       }
-      res.status(500).send({ message: "An error occurred on the server" });
+      return res
+        .status(500)
+        .send({ message: "An error occurred on the server" });
     });
 };
 
@@ -96,20 +95,26 @@ const dislikeItem = (req, res) => {
     )
     .then((item) => {
       if (!item) {
-        return res.status(NOT_FOUND_ERROR_CODE).send({ message: "Item not found" });
+        return res
+          .status(NOT_FOUND_ERROR_CODE)
+          .send({ message: "Item not found" });
       }
       return res.status(200).send(item);
     })
     .catch((error) => {
-      if (error.name === 'ValidationError') {
-        return res.status(BAD_REQUEST_ERROR_CODE).send({ message: "Invalid data provided" });
+      if (error.name === "ValidationError") {
+        return res
+          .status(BAD_REQUEST_ERROR_CODE)
+          .send({ message: "Invalid data provided" });
       }
       if (error.name === "CastError") {
         return res
           .status(BAD_REQUEST_ERROR_CODE)
           .send({ message: "Invalid item ID format" });
       }
-      res.status(500).send({ message: "An error occurred on the server" });
+      return res
+        .status(500)
+        .send({ message: "An error occurred on the server" });
     });
 };
 
