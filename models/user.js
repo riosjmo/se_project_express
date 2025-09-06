@@ -18,6 +18,22 @@ const userSchema = new mongoose.Schema({
       message: 'You must enter a valid URL',
     },
   },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    validate: {
+      validator() {
+        return validator.isEmail(this.email);
+      },
+      message: 'You must enter a valid email address',
+    },
+  },
+  password: {
+    type: String,
+    required: true,
+    select: false,
+  },
 });
 
 module.exports = mongoose.model("user", userSchema);
