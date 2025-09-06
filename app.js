@@ -11,12 +11,10 @@ const { INTERNAL_SERVER_ERROR_CODE } = require("./utils/errors");
 
 process.on("uncaughtException", (err) => {
   console.error("Unhandled Exception:", err);
-  // Optionally, notify or log the error, but don't exit the process
 });
 
 process.on("unhandledRejection", (reason, promise) => {
   console.error("Unhandled Rejection at:", promise, "reason:", reason);
-  // Optionally, notify or log the error
 });
 
 mongoose
@@ -27,12 +25,6 @@ mongoose
   .catch(console.error);
 
 app.use(express.json());
-app.use((req, res, next) => {
-  req.user = {
-    _id: "68b4dc7f1fea408baada6212",
-  };
-  next();
-});
 
 app.use(routes);
 
