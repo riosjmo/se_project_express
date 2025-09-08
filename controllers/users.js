@@ -23,22 +23,41 @@ const getUsers = (req, res) => {
 const createUser = (req, res) => {
   const { name, avatar, email, password } = req.body;
 
-  bcrypt
-    .hash(password, 10)
-    .then((hash) => User.create({ name, avatar, email, password: hash }))
+  // Required field check
+  if (!email || !password) {
+    return res
+      .status(BAD_REQUEST_ERROR_CODE)
+      .send({ message: "Email and password are required" });
+  }
+
+  // Check if email already exists
+  User.findOne({ email })
+    .then((existingUser) => {
+      if (existingUser) {
+        return res
+          .status(CONFLICT_ERROR_CODE)
+          .send({ message: "User with this email already exists" });
+      }
+
+      // Hash password and create user
+      return bcrypt
+        .hash(password, 10)
+        .then((hash) => User.create({ name, avatar, email, password: hash }));
+    })
     .then((user) => {
+      if (!user) return; // Already returned 409 or 400
+
       const userObj = user.toObject();
       delete userObj.password;
-      res.status(201).send(userObj);
+      res.status(201).send({
+        name: userObj.name,
+        avatar: userObj.avatar,
+        email: userObj.email,
+        message: "User created successfully",
+      });
     })
     .catch((err) => {
       console.error(err);
-
-      if (err.code === 11000) {
-        return res
-          .status(CONFLICT_ERROR_CODE)
-          .send({ message: "Email already exists" });
-      }
 
       if (err.name === "ValidationError") {
         return res
