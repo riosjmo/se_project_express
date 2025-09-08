@@ -73,6 +73,3 @@ jobs:
         run: cat server.log || true
       - name: Run test endpoints
         run: cd tests-12-public && bash ./bin/test-endpoints.sh
-      - name: Debug server log
-        if: failure()
-        run: cat server.log
