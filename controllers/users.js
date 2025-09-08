@@ -33,25 +33,28 @@ const createUser = (req, res) => {
     })
     .catch((err) => {
       console.error(err);
+
       if (err.code === 11000) {
         return res
           .status(CONFLICT_ERROR_CODE)
           .send({ message: "Email already exists" });
       }
+
       if (err.name === "ValidationError") {
         return res
           .status(BAD_REQUEST_ERROR_CODE)
           .send({ message: "Invalid user data" });
       }
+
       return res
         .status(INTERNAL_SERVER_ERROR_CODE)
         .send({ message: "An error has occurred on the server." });
     });
 };
 
-const getUser = (req, res) => {
-  const { userId } = req.params;
-  User.findById(userId)
+const getCurrentUser = (req, res) => {
+  const { _id } = req.user;
+  User.findById(_id)
     .orFail(() => {
       const err = new Error("User not found");
       err.statusCode = NOT_FOUND_ERROR_CODE;
@@ -84,12 +87,10 @@ const login = (req, res) => {
 
   User.findUserByCredentials(email, password)
     .then((user) => {
-      // generate JWT
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
         expiresIn: "7d",
       });
 
-      // send token back in response
       res.send({ token });
     })
     .catch((err) => {
@@ -98,4 +99,4 @@ const login = (req, res) => {
     });
 };
 
-module.exports = { getUsers, createUser, getUser, login };
+module.exports = { getUsers, createUser, getCurrentUser, login };

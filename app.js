@@ -28,8 +28,7 @@ app.use(express.json());
 
 app.use(routes);
 
-// Error-handling middleware (must be after routes)
-app.use((err, req, res) => {
+app.use((err, req, res, next) => {
   console.error(err.stack);
   res
     .status(INTERNAL_SERVER_ERROR_CODE)
