@@ -23,15 +23,13 @@ const getUsers = (req, res) => {
 const createUser = (req, res) => {
   const { name, avatar, email, password } = req.body;
 
-  // Required field check
   if (!email || !password) {
     return res
       .status(BAD_REQUEST_ERROR_CODE)
       .send({ message: "Email and password are required" });
   }
 
-  // Check if email already exists
-  User.findOne({ email })
+  return User.findOne({ email })
     .then((existingUser) => {
       if (existingUser) {
         return res
@@ -39,17 +37,16 @@ const createUser = (req, res) => {
           .send({ message: "User with this email already exists" });
       }
 
-      // Hash password and create user
       return bcrypt
         .hash(password, 10)
         .then((hash) => User.create({ name, avatar, email, password: hash }));
     })
     .then((user) => {
-      if (!user) return; // Already returned 409 or 400
+      if (!user) return res.end();
 
       const userObj = user.toObject();
       delete userObj.password;
-      res.status(201).send({
+      return res.status(201).send({
         name: userObj.name,
         avatar: userObj.avatar,
         email: userObj.email,
@@ -73,7 +70,7 @@ const createUser = (req, res) => {
 
 const getCurrentUser = (req, res) => {
   const { _id } = req.user;
-  User.findById(_id)
+  return User.findById(_id)
     .orFail(() => {
       const err = new Error("User not found");
       err.statusCode = NOT_FOUND_ERROR_CODE;
@@ -104,18 +101,74 @@ const getCurrentUser = (req, res) => {
 const login = (req, res) => {
   const { email, password } = req.body;
 
-  User.findUserByCredentials(email, password)
+  if (!email || !password) {
+    return res
+      .status(BAD_REQUEST_ERROR_CODE)
+      .send({ message: "Email and password are required" });
+  }
+
+  return User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
         expiresIn: "7d",
       });
-
-      res.send({ token });
+      return res.send({ token });
     })
     .catch((err) => {
       console.error(err);
-      res.status(401).send({ message: "Incorrect email or password" });
+      return res.status(401).send({ message: "Incorrect email or password" });
     });
 };
 
-module.exports = { getUsers, createUser, getCurrentUser, login };
+const updateUser = (req, res) => {
+  console.log("=== DEBUG INFO ===");
+  console.log("req.user:", req.user);
+  console.log("req.body:", req.body);
+  console.log("name:", req.body.name);
+  console.log("avatar:", req.body.avatar);
+  console.log("==================");
+  
+  const { _id } = req.user;
+  const { name, avatar } = req.body;
+
+  User.findByIdAndUpdate(
+    _id,
+    { name, avatar },
+    { new: true, runValidators: true }
+  )
+    .orFail(() => {
+      const err = new Error("User not found");
+      err.statusCode = NOT_FOUND_ERROR_CODE;
+      throw err;
+    })
+    .then((user) => {
+      res.status(200).send({
+        name: user.name,
+        avatar: user.avatar,
+      });
+    })
+    .catch((err) => {
+      console.error(err);
+
+      if (
+        err.statusCode === NOT_FOUND_ERROR_CODE ||
+        err.name === "DocumentNotFoundError"
+      ) {
+        return res
+          .status(NOT_FOUND_ERROR_CODE)
+          .send({ message: "User not found" });
+      }
+
+      if (err.name === "ValidationError") {
+        return res
+          .status(BAD_REQUEST_ERROR_CODE)
+          .send({ message: "Invalid data for update" });
+      }
+
+      return res
+        .status(INTERNAL_SERVER_ERROR_CODE)
+        .send({ message: "An error has occurred on the server." });
+    });
+};
+
+module.exports = { getUsers, createUser, getCurrentUser, login, updateUser };

@@ -1,12 +1,12 @@
 const express = require("express");
 const mongoose = require("mongoose");
-
 const routes = require("./routes");
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
 const { MONGO_URL = "mongodb://127.0.0.1:27017/wtwr_db" } = process.env;
+
 const { INTERNAL_SERVER_ERROR_CODE } = require("./utils/errors");
 
 process.on("uncaughtException", (err) => {
@@ -28,7 +28,8 @@ app.use(express.json());
 
 app.use(routes);
 
-app.use((err, req, res, next) => {
+
+app.use((err, req, res) => {
   console.error(err.stack);
   res
     .status(INTERNAL_SERVER_ERROR_CODE)
