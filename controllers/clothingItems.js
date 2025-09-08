@@ -2,6 +2,7 @@ const clothingItem = require("../models/clothingItems");
 const {
   NOT_FOUND_ERROR_CODE,
   BAD_REQUEST_ERROR_CODE,
+  INTERNAL_SERVER_ERROR_CODE,
 } = require("../utils/errors");
 
 const createItem = (req, res) => {
@@ -18,7 +19,7 @@ const createItem = (req, res) => {
           .send({ message: "Invalid data provided" });
       }
       return res
-        .status(500)
+        .status(INTERNAL_SERVER_ERROR_CODE)
         .send({ message: "An error occurred on the server" });
     });
 };
@@ -28,7 +29,7 @@ const getItems = (req, res) => {
     .find()
     .then((items) => res.status(200).send(items))
     .catch(() =>
-      res.status(500).send({ message: "An error occurred on the server" })
+      res.status(INTERNAL_SERVER_ERROR_CODE).send({ message: "An error occurred on the server" })
     );
 };
 
@@ -45,7 +46,7 @@ const deleteItem = (req, res) => {
       }
       if (item.owner.toString() !== req.user._id) {
         return res
-          .status(403)
+          .status(FORBIDDEN_ERROR_CODE)
           .send({ message: "You do not have permission to delete this item" });
       }
       return clothingItem.findByIdAndDelete(itemId).then(() =>
@@ -59,7 +60,7 @@ const deleteItem = (req, res) => {
           .send({ message: "Invalid item ID format" });
       }
       return res
-        .status(500)
+        .status(INTERNAL_SERVER_ERROR_CODE)
         .send({ message: "An error occurred on the server" });
     });
 };
@@ -91,7 +92,7 @@ const likeItem = (req, res) => {
           .send({ message: "Invalid item ID format" });
       }
       return res
-        .status(500)
+        .status(INTERNAL_SERVER_ERROR_CODE)
         .send({ message: "An error occurred on the server" });
     });
 };
@@ -123,7 +124,7 @@ const dislikeItem = (req, res) => {
           .send({ message: "Invalid item ID format" });
       }
       return res
-        .status(500)
+        .status(INTERNAL_SERVER_ERROR_CODE)
         .send({ message: "An error occurred on the server" });
     });
 };

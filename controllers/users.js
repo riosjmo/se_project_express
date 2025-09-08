@@ -6,6 +6,7 @@ const {
   INTERNAL_SERVER_ERROR_CODE,
   BAD_REQUEST_ERROR_CODE,
   CONFLICT_ERROR_CODE,
+  UNAUTHORIZED_ERROR_CODE,
 } = require("../utils/errors");
 const { JWT_SECRET } = require("../utils/config");
 
@@ -32,9 +33,9 @@ const createUser = (req, res) => {
   return User.findOne({ email })
     .then((existingUser) => {
       if (existingUser) {
-        return res
-          .status(CONFLICT_ERROR_CODE)
-          .send({ message: "User with this email already exists" });
+        const err = new Error("User with this email already exists");
+        err.statusCode = CONFLICT_ERROR_CODE;
+        throw err;
       }
 
       return bcrypt
@@ -116,7 +117,7 @@ const login = (req, res) => {
     })
     .catch((err) => {
       console.error(err);
-      return res.status(401).send({ message: "Incorrect email or password" });
+      return res.status(UNAUTHORIZED_ERROR_CODE).send({ message: "Incorrect email or password" });
     });
 };
 
