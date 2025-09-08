@@ -121,13 +121,6 @@ const login = (req, res) => {
 };
 
 const updateUser = (req, res) => {
-  console.log("=== DEBUG INFO ===");
-  console.log("req.user:", req.user);
-  console.log("req.body:", req.body);
-  console.log("name:", req.body.name);
-  console.log("avatar:", req.body.avatar);
-  console.log("==================");
-  
   const { _id } = req.user;
   const { name, avatar } = req.body;
 
