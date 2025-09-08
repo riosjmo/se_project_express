@@ -36,12 +36,22 @@ const deleteItem = (req, res) => {
   const { itemId } = req.params;
 
   clothingItem
-    .findByIdAndDelete(itemId)
-    .then((item) =>
-      !item
-        ? res.status(NOT_FOUND_ERROR_CODE).send({ message: "Item not found" })
-        : res.status(200).send({ message: "Item deleted successfully" })
-    )
+    .findById(req.params.itemId)
+    .then((item) => {
+      if (!item) {
+        return res
+          .status(NOT_FOUND_ERROR_CODE)
+          .send({ message: "Item not found" });
+      }
+      if (item.owner.toString() !== req.user._id) {
+        return res
+          .status(403)
+          .send({ message: "You do not have permission to delete this item" });
+      }
+      return clothingItem.findByIdAndDelete(itemId).then(() =>
+        res.status(200).send({ message: "Item deleted successfully" })
+      );
+    })
     .catch((error) => {
       if (error.name === "CastError") {
         return res
