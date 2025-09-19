@@ -5,6 +5,7 @@ const routes = require("./routes");
 const helmet = require("helmet");
 const escape = require("escape-html");
 const rateLimit = require("express-rate-limit");
+const errorHandler = require("./middlewares/error-handler");
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -32,6 +33,8 @@ const limiter = rateLimit({
 
 app.use(limiter);
 
+app.use(errorHandler);
+
 mongoose
   .connect(MONGO_URL)
   .then(() => {
@@ -47,7 +50,6 @@ app.post("/comment", (req, res) => {
   const safeComment = escape(req.body.comment);
   res.send({ comment: safeComment });
 });
-
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
