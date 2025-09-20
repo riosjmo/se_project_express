@@ -6,6 +6,7 @@ const helmet = require("helmet");
 const escape = require("escape-html");
 const rateLimit = require("express-rate-limit");
 const errorHandler = require("./middlewares/error-handler");
+const { requestLogger, errorLogger } = require("./middlewares/logger");
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -44,7 +45,13 @@ mongoose
 
 app.use(express.json());
 
+
+app.use(requestLogger);
 app.use(routes);
+
+app.use(errorLogger);
+
+app.use(errors());
 
 app.post("/comment", (req, res) => {
   const safeComment = escape(req.body.comment);
