@@ -1,8 +1,8 @@
-console.log("Starting app.js");
 
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+require("dotenv").config();
 const helmet = require("helmet");
 const escape = require("escape-html");
 const rateLimit = require("express-rate-limit");
