@@ -17,6 +17,12 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 const { MONGO_URL = "mongodb://127.0.0.1:27017/wtwr_db" } = process.env;
 
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Server will crash now');
+  }, 0);
+});
+
 // Security + general middlewares
 app.use(cors());
 app.use(helmet());
