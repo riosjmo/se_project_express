@@ -3,24 +3,22 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 require("dotenv").config();
 const helmet = require("helmet");
-const escape = require("escape-html");
 const rateLimit = require("express-rate-limit");
-const { celebrate, Joi, errors } = require("celebrate");
+const { errors } = require("celebrate");
 
 const routes = require("./routes");
 const errorHandler = require("./middlewares/error-handler");
 const { requestLogger, errorLogger } = require("./middlewares/logger");
-const { createUser } = require("./controllers/users");
-const { INTERNAL_SERVER_ERROR_CODE } = require("./utils/errors");
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 const { MONGO_URL = "mongodb://127.0.0.1:27017/wtwr_db" } = process.env;
 
-app.get('/crash-test', () => {
+app.get("/crash-test", (req, res) => {
   setTimeout(() => {
-    throw new Error('Server will crash now');
+    throw new Error("Server will crash now");
   }, 0);
+  res.send({ message: "Server will crash in 0ms!" });
 });
 
 // Security + general middlewares
@@ -52,24 +50,6 @@ app.use(requestLogger);
 // Routes
 app.use(routes);
 
-// Safe comment route
-app.post("/comment", (req, res) => {
-  const safeComment = escape(req.body.comment);
-  res.send({ comment: safeComment });
-});
-
-// Example route with validation
-app.post(
-  "/users",
-  celebrate({
-    body: Joi.object().keys({
-      email: Joi.string().email().required(),
-      password: Joi.string().min(6).required(),
-    }),
-  }),
-  createUser
-);
-
 // Winston error logger (must come after routes)
 app.use(errorLogger);
 
@@ -78,14 +58,6 @@ app.use(errors());
 
 // Central error handler
 app.use(errorHandler);
-
-// Fallback error handler
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res
-    .status(INTERNAL_SERVER_ERROR_CODE)
-    .send({ message: "An error has occurred on the server." });
-});
 
 // Start server
 app.listen(PORT, "0.0.0.0", () => {

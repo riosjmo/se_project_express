@@ -9,12 +9,6 @@ const {
 } = require("../utils/errors");
 const { JWT_SECRET } = require("../utils/config");
 
-const getUsers = (req, res, next) => {
-  User.find({})
-    .then((users) => res.status(200).send(users))
-    .catch(next);
-};
-
 const createUser = (req, res, next) => {
   const { name, avatar, email, password } = req.body;
 
@@ -79,9 +73,7 @@ const login = (req, res, next) => {
       });
       return res.send({ token });
     })
-    .catch(() => {
-      return next(new UnauthorizedError("Incorrect email or password"));
-    });
+    .catch(() => next(new UnauthorizedError("Incorrect email or password")));
 };
 
 const updateUser = (req, res, next) => {
@@ -108,4 +100,4 @@ const updateUser = (req, res, next) => {
     });
 };
 
-module.exports = { getUsers, createUser, getCurrentUser, login, updateUser };
+module.exports = { createUser, getCurrentUser, login, updateUser };
