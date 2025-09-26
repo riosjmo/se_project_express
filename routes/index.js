@@ -4,7 +4,7 @@ const clothingItemRouter = require("./clothingItems");
 const { login, createUser } = require("../controllers/users");
 const userRouter = require("./users");
 const auth = require("../middlewares/auth");
-const UnauthorizedError = require("../utils/errors/UnauthorizedError");
+const NotFoundError = require("../utils/errors/UnauthorizedError");
 
 router.post(
   "/signin",
@@ -23,6 +23,7 @@ router.post(
       email: Joi.string().email().required(),
       password: Joi.string().required().min(8).max(100),
       name: Joi.string().required().min(2).max(30),
+      avatar: Joi.string().uri().required(),
     }),
   }),
   createUser
@@ -35,7 +36,7 @@ router.use(auth);
 router.use("/users", userRouter);
 
 router.use((req, res, next) => {
-  next(new UnauthorizedError("Authorization required"));
+  next(new NotFoundError("Requested resource not found"));
 });
 
 module.exports = router;

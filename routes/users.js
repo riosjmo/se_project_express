@@ -6,7 +6,7 @@ const auth = require("../middlewares/auth");
 router.get("/me", auth, getCurrentUser);
 router.patch("/me", auth, celebrate({
   body: Joi.object().keys({
-    email: Joi.string().email().required(),
+    avatar: Joi.string().uri().required(),
     name: Joi.string().required().min(2).max(30),
   }),
 }), updateUser);
