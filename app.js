@@ -21,8 +21,29 @@ app.get("/crash-test", (req, res) => {
   res.send({ message: "Server will crash in 0ms!" });
 });
 
+// Handle preflight requests for all routes
+app.options("*", (req, res) => {
+  res.header("Access-Control-Allow-Origin", req.headers.origin);
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.sendStatus(200);
+});
+
 // Security + general middlewares
-app.use(cors());
+const corsOptions = {
+  origin: [
+    "http://localhost:3000",
+    "http://localhost:3001", 
+    "https://riowtwr.jumpingcrab.com",
+    "https://www.riowtwr.jumpingcrab.com"
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+  allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept", "Authorization"],
+  credentials: true
+};
+
+app.use(cors(corsOptions));
 app.use(helmet());
 app.use(express.json());
 

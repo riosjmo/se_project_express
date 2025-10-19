@@ -4,7 +4,7 @@ const clothingItemRouter = require("./clothingItems");
 const { login, createUser } = require("../controllers/users");
 const userRouter = require("./users");
 const auth = require("../middlewares/auth");
-const NotFoundError = require("../utils/errors/UnauthorizedError");
+const NotFoundError = require("../utils/errors/NotFoundError");
 
 router.post(
   "/signin",
